@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { 
+import {
   Mail, Search, Cpu, Zap, Database, TrendingUp, Clock, Code,
   CheckCircle2, AlertCircle, Loader2, Play, RotateCcw
 } from "lucide-react";
@@ -45,12 +45,12 @@ const WORKFLOWS: Workflow[] = [
     label: "Sales & CRM",
     trigger: "New form submission received",
     nodes: [
-      { id: "n1", x: 5,  y: 38, label: "Typeform Trigger",      type: "trigger", icon: <Mail    className="w-4 h-4"/>, app: "Typeform",  color: "#E8593A", execLog: '{"lead":"Ahmed K.","company":"RetailCo","email":"ahmed@retailco.com"}' },
-      { id: "n2", x: 30, y: 20, label: "LinkedIn Lookup",       type: "action",  icon: <Search  className="w-4 h-4"/>, app: "LinkedIn", color: "#0A66C2", execLog: '{"role":"Head of Ops","connections":523,"verified":true}' },
-      { id: "n3", x: 30, y: 56, label: "CRM – Create Contact",  type: "action",  icon: <Database className="w-4 h-4"/>, app: "HubSpot", color: "#FF7A59", execLog: '{"contactId":"hs_00492","pipeline":"Inbound"}' },
-      { id: "n4", x: 58, y: 38, label: "GPT-4 Draft Email",     type: "ai",      icon: <Cpu     className="w-4 h-4"/>, app: "OpenAI",  color: "#10a37f", execLog: '"Hi Ahmed, saw your ops role at RetailCo…"' },
-      { id: "n5", x: 82, y: 20, label: "Send via Gmail",        type: "output",  icon: <Mail    className="w-4 h-4"/>, app: "Gmail",   color: "#EA4335", execLog: '{"messageId":"msg_8a2f","status":"sent"}' },
-      { id: "n6", x: 82, y: 56, label: "Slack – Notify SDR",   type: "output",  icon: <Zap     className="w-4 h-4"/>, app: "Slack",   color: "#4A154B", execLog: '{"channel":"#new-leads","ts":"1715283901"}' },
+      { id: "n1", x: 5, y: 38, label: "Typeform Trigger", type: "trigger", icon: <Mail className="w-4 h-4" />, app: "Typeform", color: "#E8593A", execLog: '{"lead":"Ahmed K.","company":"RetailCo","email":"ahmed@retailco.com"}' },
+      { id: "n2", x: 30, y: 20, label: "LinkedIn Lookup", type: "action", icon: <Search className="w-4 h-4" />, app: "LinkedIn", color: "#0A66C2", execLog: '{"role":"Head of Ops","connections":523,"verified":true}' },
+      { id: "n3", x: 30, y: 56, label: "CRM – Create Contact", type: "action", icon: <Database className="w-4 h-4" />, app: "HubSpot", color: "#FF7A59", execLog: '{"contactId":"hs_00492","pipeline":"Inbound"}' },
+      { id: "n4", x: 58, y: 38, label: "GPT-4 Draft Email", type: "ai", icon: <Cpu className="w-4 h-4" />, app: "OpenAI", color: "#10a37f", execLog: '"Hi Ahmed, saw your ops role at RetailCo…"' },
+      { id: "n5", x: 82, y: 20, label: "Send via Gmail", type: "output", icon: <Mail className="w-4 h-4" />, app: "Gmail", color: "#EA4335", execLog: '{"messageId":"msg_8a2f","status":"sent"}' },
+      { id: "n6", x: 82, y: 56, label: "Slack – Notify SDR", type: "output", icon: <Zap className="w-4 h-4" />, app: "Slack", color: "#4A154B", execLog: '{"channel":"#new-leads","ts":"1715283901"}' },
     ],
     edges: [
       { from: "n1", to: "n2" }, { from: "n1", to: "n3" },
@@ -63,11 +63,11 @@ const WORKFLOWS: Workflow[] = [
     label: "Healthcare",
     trigger: "Patient intake form submitted",
     nodes: [
-      { id: "n1", x: 5,  y: 50, label: "Patient Form",         type: "trigger", icon: <Mail      className="w-4 h-4"/>, app: "JotForm",   color: "#E8593A", execLog: '{"name":"Sara M.","age":34,"symptoms":"chest tightness, fatigue"}' },
-      { id: "n2", x: 30, y: 50, label: "AI Urgency Score",     type: "ai",      icon: <Cpu       className="w-4 h-4"/>, app: "OpenAI",    color: "#10a37f", execLog: '{"urgency":"HIGH","score":0.87,"reason":"cardiac keywords detected"}' },
-      { id: "n3", x: 58, y: 25, label: "Book Priority Slot",   type: "action",  icon: <Clock     className="w-4 h-4"/>, app: "Cal.com",   color: "#4F46E5", execLog: '{"slot":"2026-05-10 09:30","doctor":"Dr. Patel"}' },
-      { id: "n4", x: 58, y: 70, label: "Flag – Low Priority",  type: "action",  icon: <Database  className="w-4 h-4"/>, app: "Airtable",  color: "#FFBF00", execLog: '{"queue":"routine","eta":"3 days"}' },
-      { id: "n5", x: 82, y: 50, label: "SMS Confirmation",     type: "output",  icon: <Zap       className="w-4 h-4"/>, app: "Twilio",    color: "#F22F46", execLog: '{"status":"delivered","to":"+8801XXXXXXX"}' },
+      { id: "n1", x: 5, y: 50, label: "Patient Form", type: "trigger", icon: <Mail className="w-4 h-4" />, app: "JotForm", color: "#E8593A", execLog: '{"name":"Sara M.","age":34,"symptoms":"chest tightness, fatigue"}' },
+      { id: "n2", x: 30, y: 50, label: "AI Urgency Score", type: "ai", icon: <Cpu className="w-4 h-4" />, app: "OpenAI", color: "#10a37f", execLog: '{"urgency":"HIGH","score":0.87,"reason":"cardiac keywords detected"}' },
+      { id: "n3", x: 58, y: 25, label: "Book Priority Slot", type: "action", icon: <Clock className="w-4 h-4" />, app: "Cal.com", color: "#4F46E5", execLog: '{"slot":"2026-05-10 09:30","doctor":"Dr. Patel"}' },
+      { id: "n4", x: 58, y: 70, label: "Flag – Low Priority", type: "action", icon: <Database className="w-4 h-4" />, app: "Airtable", color: "#FFBF00", execLog: '{"queue":"routine","eta":"3 days"}' },
+      { id: "n5", x: 82, y: 50, label: "SMS Confirmation", type: "output", icon: <Zap className="w-4 h-4" />, app: "Twilio", color: "#F22F46", execLog: '{"status":"delivered","to":"+8801XXXXXXX"}' },
     ],
     edges: [
       { from: "n1", to: "n2" },
@@ -80,11 +80,11 @@ const WORKFLOWS: Workflow[] = [
     label: "Education",
     trigger: "Assignment file uploaded to Google Drive",
     nodes: [
-      { id: "n1", x: 5,  y: 50, label: "Drive Upload",          type: "trigger", icon: <Database className="w-4 h-4"/>, app: "Google Drive", color: "#E8593A", execLog: '{"file":"essay_unit4.pdf","student":"Yuki T.","class":"ENG201"}' },
-      { id: "n2", x: 28, y: 50, label: "Extract PDF Text",      type: "action",  icon: <Code     className="w-4 h-4"/>, app: "PDF.co",       color: "#8B5CF6", execLog: '{"chars":4821,"pages":3}' },
-      { id: "n3", x: 54, y: 50, label: "GPT-4 Grade & Review",  type: "ai",      icon: <Cpu      className="w-4 h-4"/>, app: "OpenAI",       color: "#10a37f", execLog: '{"grade":"B+","feedback":"Strong thesis, weak conclusion.","score":82}' },
-      { id: "n4", x: 79, y: 28, label: "Update LMS Grade",      type: "output",  icon: <CheckCircle2 className="w-4 h-4"/>, app: "Canvas LMS", color: "#E66000", execLog: '{"grade_posted":true,"notify_student":true}' },
-      { id: "n5", x: 79, y: 70, label: "Email Feedback",        type: "output",  icon: <Mail     className="w-4 h-4"/>, app: "Gmail",        color: "#EA4335", execLog: '{"to":"yuki@uni.edu","subject":"Your ENG201 Grade"}' },
+      { id: "n1", x: 5, y: 50, label: "Drive Upload", type: "trigger", icon: <Database className="w-4 h-4" />, app: "Google Drive", color: "#E8593A", execLog: '{"file":"essay_unit4.pdf","student":"Yuki T.","class":"ENG201"}' },
+      { id: "n2", x: 28, y: 50, label: "Extract PDF Text", type: "action", icon: <Code className="w-4 h-4" />, app: "PDF.co", color: "#8B5CF6", execLog: '{"chars":4821,"pages":3}' },
+      { id: "n3", x: 54, y: 50, label: "GPT-4 Grade & Review", type: "ai", icon: <Cpu className="w-4 h-4" />, app: "OpenAI", color: "#10a37f", execLog: '{"grade":"B+","feedback":"Strong thesis, weak conclusion.","score":82}' },
+      { id: "n4", x: 79, y: 28, label: "Update LMS Grade", type: "output", icon: <CheckCircle2 className="w-4 h-4" />, app: "Canvas LMS", color: "#E66000", execLog: '{"grade_posted":true,"notify_student":true}' },
+      { id: "n5", x: 79, y: 70, label: "Email Feedback", type: "output", icon: <Mail className="w-4 h-4" />, app: "Gmail", color: "#EA4335", execLog: '{"to":"yuki@uni.edu","subject":"Your ENG201 Grade"}' },
     ],
     edges: [
       { from: "n1", to: "n2" }, { from: "n2", to: "n3" },
@@ -96,12 +96,12 @@ const WORKFLOWS: Workflow[] = [
     label: "Finance",
     trigger: "Invoice email received in Gmail",
     nodes: [
-      { id: "n1", x: 4,  y: 50, label: "Gmail – Invoice In",   type: "trigger", icon: <Mail        className="w-4 h-4"/>, app: "Gmail",    color: "#E8593A", execLog: '{"from":"vendor@acme.com","subject":"Invoice #5582","has_attachment":true}' },
-      { id: "n2", x: 27, y: 50, label: "OCR Extract Fields",   type: "action",  icon: <Search      className="w-4 h-4"/>, app: "Mindee",   color: "#0EA5E9", execLog: '{"amount":14200,"vendor":"Acme Ltd","due":"2026-06-01","currency":"USD"}' },
-      { id: "n3", x: 52, y: 30, label: "Match vs PO",          type: "action",  icon: <Database    className="w-4 h-4"/>, app: "Airtable", color: "#FFBF00", execLog: '{"po_match":true,"po_id":"PO-3821","delta":0}' },
-      { id: "n4", x: 52, y: 68, label: "Fraud Risk Score",     type: "ai",      icon: <Cpu         className="w-4 h-4"/>, app: "OpenAI",   color: "#10a37f", execLog: '{"risk":"LOW","score":0.12,"reason":"known vendor, typical amount"}' },
-      { id: "n5", x: 78, y: 30, label: "Auto Approve Payment", type: "output",  icon: <TrendingUp  className="w-4 h-4"/>, app: "Stripe",   color: "#635BFF", execLog: '{"payment_id":"py_xx92","scheduled":"2026-06-01","status":"queued"}' },
-      { id: "n6", x: 78, y: 68, label: "Notify CFO – Slack",   type: "output",  icon: <Zap         className="w-4 h-4"/>, app: "Slack",    color: "#4A154B", execLog: '{"channel":"#finance","msg":"Invoice #5582 approved $14,200"}' },
+      { id: "n1", x: 4, y: 50, label: "Gmail – Invoice In", type: "trigger", icon: <Mail className="w-4 h-4" />, app: "Gmail", color: "#E8593A", execLog: '{"from":"vendor@acme.com","subject":"Invoice #5582","has_attachment":true}' },
+      { id: "n2", x: 27, y: 50, label: "OCR Extract Fields", type: "action", icon: <Search className="w-4 h-4" />, app: "Mindee", color: "#0EA5E9", execLog: '{"amount":14200,"vendor":"Acme Ltd","due":"2026-06-01","currency":"USD"}' },
+      { id: "n3", x: 52, y: 30, label: "Match vs PO", type: "action", icon: <Database className="w-4 h-4" />, app: "Airtable", color: "#FFBF00", execLog: '{"po_match":true,"po_id":"PO-3821","delta":0}' },
+      { id: "n4", x: 52, y: 68, label: "Fraud Risk Score", type: "ai", icon: <Cpu className="w-4 h-4" />, app: "OpenAI", color: "#10a37f", execLog: '{"risk":"LOW","score":0.12,"reason":"known vendor, typical amount"}' },
+      { id: "n5", x: 78, y: 30, label: "Auto Approve Payment", type: "output", icon: <TrendingUp className="w-4 h-4" />, app: "Stripe", color: "#635BFF", execLog: '{"payment_id":"py_xx92","scheduled":"2026-06-01","status":"queued"}' },
+      { id: "n6", x: 78, y: 68, label: "Notify CFO – Slack", type: "output", icon: <Zap className="w-4 h-4" />, app: "Slack", color: "#4A154B", execLog: '{"channel":"#finance","msg":"Invoice #5582 approved $14,200"}' },
     ],
     edges: [
       { from: "n1", to: "n2" },
@@ -164,9 +164,9 @@ function NodeCard({
 }) {
   const typeColors: Record<string, string> = {
     trigger: "#E8593A",
-    action:  "#3B82F6",
-    ai:      "#10a37f",
-    output:  "#8B5CF6",
+    action: "#3B82F6",
+    ai: "#10a37f",
+    output: "#8B5CF6",
   };
   const barColor = typeColors[node.type] ?? "#E8593A";
 
@@ -184,7 +184,7 @@ function NodeCard({
       }}
       className={cn(
         "rounded-xl overflow-hidden shadow-2xl border transition-all duration-300 select-none",
-        active  ? "border-kx-orange scale-105 shadow-[0_0_20px_rgba(232,89,58,0.5)]" : "",
+        active ? "border-kx-orange scale-105 shadow-[0_0_20px_rgba(232,89,58,0.5)]" : "",
         done && !active ? "border-green-500/60" : "",
         !active && !done ? "border-white/10" : "",
       )}
@@ -197,8 +197,8 @@ function NodeCard({
         <div className="flex items-center justify-between mb-2">
           <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest">{node.app}</span>
           {running && active && <Loader2 className="w-3 h-3 text-kx-orange animate-spin" />}
-          {done   && !active && <CheckCircle2 className="w-3 h-3 text-green-500" />}
-          {!done  && !active && !running && <AlertCircle className="w-3 h-3 text-white/20" />}
+          {done && !active && <CheckCircle2 className="w-3 h-3 text-green-500" />}
+          {!done && !active && !running && <AlertCircle className="w-3 h-3 text-white/20" />}
         </div>
 
         {/* Icon + Label */}
@@ -249,10 +249,10 @@ export function WorkflowCanvas({ workflowId }: { workflowId: string }) {
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState({ w: 800, h: 320 });
-  const [execStep, setExecStep]   = useState(-1);   // which level is running
+  const [execStep, setExecStep] = useState(-1);   // which level is running
   const [doneNodes, setDoneNodes] = useState<Set<string>>(new Set());
-  const [running, setRunning]     = useState(false);
-  const [started, setStarted]     = useState(false);
+  const [running, setRunning] = useState(false);
+  const [started, setStarted] = useState(false);
 
   // Track canvas dimensions
   useEffect(() => {
@@ -268,10 +268,14 @@ export function WorkflowCanvas({ workflowId }: { workflowId: string }) {
 
   // Reset when workflow changes
   useEffect(() => {
-    setExecStep(-1);
-    setDoneNodes(new Set());
-    setRunning(false);
-    setStarted(false);
+    const handleReset = () => {
+      setExecStep(-1);
+      setDoneNodes(new Set());
+      setRunning(false);
+      setStarted(false);
+    }
+
+    handleReset();
   }, [workflowId]);
 
   // Auto-advance through levels
@@ -322,11 +326,8 @@ export function WorkflowCanvas({ workflowId }: { workflowId: string }) {
             "w-2 h-2 rounded-full",
             running ? "bg-kx-orange animate-pulse" : doneNodes.size > 0 ? "bg-green-500" : "bg-white/20"
           )} />
-          <span className="text-xs font-mono text-white/50">
+          <span className={cn("text-xs font-mono text-white/50", running ? "animate-pulse" : "", doneNodes.size > 0 ? "text-green-400" : "")}>
             {running ? "EXECUTING…" : doneNodes.size > 0 ? "WORKFLOW COMPLETE" : "READY"}
-          </span>
-          <span className="text-[10px] font-mono text-white/20 hidden md:block">
-            · {workflow.nodes.length} nodes · {workflow.edges.length} edges
           </span>
         </div>
         <div className="flex gap-2">
@@ -374,7 +375,7 @@ export function WorkflowCanvas({ workflowId }: { workflowId: string }) {
             const a = workflow.nodes.find(n => n.id === edge.from)!;
             const b = workflow.nodes.find(n => n.id === edge.to)!;
             const d = bezierPath(a, b, dims.w, dims.h);
-            const isDone  = doneNodes.has(edge.from) && doneNodes.has(edge.to);
+            const isDone = doneNodes.has(edge.from) && doneNodes.has(edge.to);
             const isActive = activeNodes.has(edge.from) || activeNodes.has(edge.to);
 
             return (
@@ -435,7 +436,7 @@ export function WorkflowCanvas({ workflowId }: { workflowId: string }) {
         {!started && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="text-center">
-              <p className="text-white/20 text-sm font-mono mb-2">Click "Run workflow" to simulate</p>
+              <p className="text-white/20 text-sm font-mono mb-2">Click Run workflow to simulate</p>
             </div>
           </div>
         )}

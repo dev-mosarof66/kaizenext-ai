@@ -69,7 +69,7 @@ export function FinalCTA() {
                 <button className="w-full sm:w-auto relative group overflow-hidden rounded-full bg-white/5 border border-white/10 px-8 py-3 transition-all hover:bg-white/10 hover:border-white/20 cursor-pointer backdrop-blur-md shadow-lg">
                   <div className="relative flex items-center justify-center gap-3 text-white font-semibold md:text-lg">
                     <Mail className="w-5 h-5 text-kx-muted group-hover:text-white transition-colors" />
-                    <span className="flex">Email us <span className="hidden sm:block"> (hello@kaizenext.com)</span></span>
+                    <span className="flex items-center gap-1">Email us <span className="hidden sm:block"> ( hello@kaizenext.com )</span></span>
                   </div>
                 </button>
               </Link>

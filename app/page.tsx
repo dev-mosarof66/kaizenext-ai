@@ -6,7 +6,7 @@ import { VoiceDemo } from "@/components/voice-demo";
 import { HowWeWork } from "@/components/how-we-work";
 import { PartnersLogo } from "@/components/partners-logo";
 import { Testimonial } from "@/components/testimonial";
-import { InsightsTeaser } from "@/components/insights-teaser";
+// import { InsightsTeaser } from "@/components/insights-teaser";
 import { FinalCTA } from "@/components/final-cta";
 
 export default function Home() {
@@ -29,8 +29,8 @@ export default function Home() {
         <div className="w-full h-px bg-linear-to-r from-transparent via-green-600 to-transparent" />
         <Testimonial />
         <div className="w-full h-px bg-linear-to-r from-transparent via-green-600 to-transparent" />
-        <InsightsTeaser />
-        <div className="w-full h-px bg-linear-to-r from-transparent via-green-600 to-transparent" />
+        {/* <InsightsTeaser />
+        <div className="w-full h-px bg-linear-to-r from-transparent via-green-600 to-transparent" /> */}
         <FinalCTA />
       </main>
       <div className="w-full h-px bg-linear-to-r from-transparent via-green-600 to-transparent" />

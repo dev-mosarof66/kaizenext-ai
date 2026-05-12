@@ -16,8 +16,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { WorkflowCanvas } from "@/components/workflow-canvas";
 import CountUp from "@/components/counter-up";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // ── Animation variants ────────────────────────────────────────────────────────
 
@@ -87,12 +87,15 @@ function HeroSection() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="w-full flex flex-col sm:flex-row gap-4 pt-4">
-              <Button onClick={()=> router.push('/contact')} className="flex-1 bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold py-4 px-8 rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-2 group">
+              <Link
+               href="/contact">
+                <button className="w-full bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold py-4 px-8 rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95  gap-2 group flex items-center justify-center">
                 Book a discovery call <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button onClick={() => router.push('/work')} className="flex-1 bg-kx-white/5 border border-white/10 hover:bg-kx-white/10 text-kx-white font-bold py-4 px-8 rounded-xl transition-all backdrop-blur-md">
+                </button>
+              </Link>
+              <button className="bg-kx-white/5 border border-white/10 hover:bg-kx-white/10 text-kx-white font-bold py-4 px-8 rounded-xl transition-all backdrop-blur-md">
                 See our work
-              </Button>
+              </button>
             </motion.div>
           </motion.div>
 

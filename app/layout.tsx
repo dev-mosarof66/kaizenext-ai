@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { VoiceAssistant } from "@/components/voice-assistant";
 import { defaultMetadata, defaultViewport } from "@/lib/metadata";
 
 export const viewport = defaultViewport;
@@ -61,6 +62,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
+          <VoiceAssistant />
         </div>
       </body>
     </html>
