@@ -2,12 +2,13 @@
 
 import { FinalCTA } from "@/components/final-cta";
 import { motion, AnimatePresence, Variants } from "motion/react";
-import { ArrowRight, ChevronDown, Mic, Phone, Headphones, Globe } from "lucide-react";
+import { ArrowRight, ChevronDown, Mic, Phone, PhoneOff, Headphones, Globe } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { PrimaryButton, OutlineButton } from "@/components/button";
 import Video from "next-video";
 import CountUp from "@/components/counter-up";
+import { useConversation } from "@11labs/react";
 
 const DEMO_VIDEO_URL = "https://res.cloudinary.com/drw5jlvd5/video/upload/v1778491272/voice-demo_kwiaui.mp4";
 
@@ -31,6 +32,7 @@ export default function VoiceAIPage() {
       <main className="flex-1 pt-20 w-full">
         <HeroSection />
         <BenefitsStrip />
+        <LiveTrySection />
         <UseCasesSection />
         <HowItWorksSection />
         <LanguagesSection />
@@ -72,14 +74,12 @@ function HeroSection() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="w-full flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/contact">
-                <button className="w-full bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold py-4 px-8 rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95  gap-2 group flex items-center justify-center">
-                  Book a demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Link>
-              <button className="bg-kx-white/5 border border-white/10 hover:bg-kx-white/10 text-kx-white font-bold py-4 px-8 rounded-xl transition-all backdrop-blur-md">
+              <PrimaryButton navigate="/contact" className="w-full sm:w-auto">
+                Book a demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </PrimaryButton>
+              <OutlineButton onClick={() => document.getElementById("live-try")?.scrollIntoView({ behavior: "smooth" })} className="w-full sm:w-auto">
                 Try it live
-              </button>
+              </OutlineButton>
             </motion.div>
           </motion.div>
 
@@ -91,7 +91,7 @@ function HeroSection() {
             className="flex justify-center items-center"
           >
             <div className="relative w-full max-w-xl h-96 aspect-video rounded-3xl overflow-hidden border border-kx-dark-border shadow-2xl ring-1 ring-white/5">
-              <Video src={DEMO_VIDEO_URL} autoPlay loop className="w-full h-full object-cover" />
+              <Video src={DEMO_VIDEO_URL}   className="w-full h-full object-cover" />
               <div className="absolute top-4 left-4 right-4 bg-black/60 backdrop-blur-sm rounded-xl p-3 border border-kx-orange/20">
                 <div className="grid grid-cols-4 gap-2 text-xs font-mono">
                   <span className="text-green-400 animate-pulse">● LIVE</span>
@@ -146,6 +146,190 @@ function BenefitsStrip() {
   );
 }
 
+// ── Live Try ──────────────────────────────────────────────────────────────────
+
+function LiveTrySection() {
+  const [transcript, setTranscript] = useState<{ role: "user" | "ai"; text: string }[]>([]);
+  const [micError, setMicError] = useState<string | null>(null);
+
+  const conversation = useConversation({
+    onMessage: ({ message, source }: { message: string; source: "user" | "ai" }) => {
+      setTranscript(prev => [...prev, { role: source, text: message }]);
+    },
+    onError: (message: string) => {
+      console.error("[ElevenLabs]", message);
+      if (/NotAllowed|Permission|denied/i.test(message)) {
+        setMicError("Microphone blocked. Click the lock icon in your address bar → Site settings → Microphone → Allow, then try again.");
+      } else if (/socket|closed|disconnect|1006|1011/i.test(message)) {
+        setMicError("Live demo is temporarily unavailable. Please book a call to hear the agent in action.");
+      } else {
+        setMicError("Live demo is temporarily unavailable. Please try again later.");
+      }
+    },
+  });
+
+  const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID ?? "";
+  const isActive = conversation.status === "connected" || conversation.status === "connecting";
+  const isConnecting = conversation.status === "connecting";
+
+  const handleToggle = async () => {
+    setMicError(null);
+    if (isActive) {
+      await conversation.endSession();
+      return;
+    }
+    setTranscript([]);
+    try {
+      await conversation.startSession({ agentId, connectionType: "websocket" });
+    } catch (err: unknown) {
+      console.error("[ElevenLabs startSession]", err);
+      const msg = err instanceof Error ? err.name + err.message : String(err);
+      if (/NotAllowed|Permission|denied/i.test(msg)) {
+        setMicError("Microphone blocked. Click the lock icon in your address bar → Site settings → Microphone → Allow, then try again.");
+      } else {
+        setMicError("Live demo is temporarily unavailable. Please try again later.");
+      }
+    }
+  };
+
+  const statusLabel =
+    micError ? micError :
+    isConnecting ? "Connecting..." :
+    conversation.status === "connected" && conversation.isSpeaking ? "Agent is speaking..." :
+    conversation.status === "connected" ? "Listening to you..." :
+    conversation.status === "disconnecting" ? "Ending call..." :
+    "Press to start talking";
+
+  return (
+    <section id="live-try" className="py-24 md:py-32 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(232,89,58,0.06),transparent_70%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#ffffff03_1px,transparent_1px)] bg-size-[32px_32px] pointer-events-none" />
+
+      <div className="w-full max-w-4xl mx-auto px-6 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16 flex flex-col items-center text-center gap-4"
+        >
+          <span className="text-kx-orange font-mono text-xs font-medium tracking-widest uppercase">LIVE DEMO</span>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
+            Talk to our <span className="italic font-serif text-kx-orange">AI agent.</span>
+          </h2>
+          <p className="text-kx-dark-muted text-lg max-w-xl leading-relaxed">
+            Experience the conversation quality firsthand. Press the button and speak — no setup required.
+          </p>
+        </motion.div>
+
+        <div className="flex flex-col items-center gap-12">
+          {/* Orb + sonar rings */}
+          <div className="relative flex items-center justify-center w-56 h-56">
+            {isActive && [1, 2, 3].map((ring) => (
+              <motion.div
+                key={ring}
+                className="absolute rounded-full border border-kx-orange/30"
+                style={{ width: 96 + ring * 56, height: 96 + ring * 56 }}
+                animate={{ scale: [1, 1.12, 1], opacity: [0.6, 0, 0.6] }}
+                transition={{ duration: 2.2, delay: ring * 0.45, repeat: Infinity, ease: "easeInOut" }}
+              />
+            ))}
+
+            {conversation.isSpeaking && (
+              <motion.div
+                className="absolute rounded-full"
+                style={{ width: 128, height: 128, background: "radial-gradient(circle, rgba(232,89,58,0.3), transparent 70%)" }}
+                animate={{ scale: [1, 1.25, 1], opacity: [0.8, 0.3, 0.8] }}
+                transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+              />
+            )}
+
+            <motion.button
+              onClick={handleToggle}
+              whileTap={{ scale: 0.92 }}
+              whileHover={{ scale: 1.06 }}
+              className={cn(
+                "relative z-10 w-24 h-24 rounded-full flex items-center justify-center border-2 transition-all duration-500 cursor-pointer",
+                isActive
+                  ? "bg-red-500/10 border-red-500/60 shadow-[0_0_50px_rgba(239,68,68,0.3)]"
+                  : "bg-kx-orange/10 border-kx-orange/60 shadow-[0_0_50px_rgba(232,89,58,0.3)] hover:bg-kx-orange/20"
+              )}
+            >
+              <AnimatePresence mode="wait">
+                {isConnecting ? (
+                  <motion.div key="spinner" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.5 }}>
+                    <div className="w-7 h-7 rounded-full border-2 border-kx-orange border-t-transparent animate-spin" />
+                  </motion.div>
+                ) : isActive ? (
+                  <motion.div key="hangup" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.5 }}>
+                    <PhoneOff className="w-8 h-8 text-red-400" />
+                  </motion.div>
+                ) : (
+                  <motion.div key="mic" initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.5 }}>
+                    <Mic className="w-8 h-8 text-kx-orange" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          </div>
+
+          {/* Status label */}
+          <div className="flex items-center gap-2.5 -mt-6 max-w-sm text-center">
+            <div className={cn(
+              "w-2 h-2 rounded-full shrink-0 transition-colors",
+              micError ? "bg-red-400" :
+              isConnecting ? "bg-yellow-400 animate-pulse" :
+              conversation.status === "connected" && conversation.isSpeaking ? "bg-kx-orange animate-pulse" :
+              conversation.status === "connected" ? "bg-green-400 animate-pulse" :
+              "bg-kx-surface-600"
+            )} />
+            <span className={cn("text-sm font-mono", micError ? "text-red-400" : "text-kx-dark-muted")}>{statusLabel}</span>
+          </div>
+
+          {/* Transcript */}
+          <AnimatePresence>
+            {transcript.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 16 }}
+                className="w-full max-w-2xl rounded-2xl border border-kx-dark-border bg-kx-surface-raised/40 backdrop-blur-sm overflow-hidden"
+              >
+                <div className="px-4 py-3 border-b border-kx-dark-border flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                  <span className="text-xs font-mono text-kx-dark-muted uppercase tracking-widest">Transcript</span>
+                </div>
+                <div className="p-4 max-h-64 overflow-y-auto flex flex-col gap-3">
+                  {transcript.map((msg, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: msg.role === "user" ? 16 : -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className={cn("flex", msg.role === "user" ? "justify-end" : "justify-start")}
+                    >
+                      <div className={cn(
+                        "max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed",
+                        msg.role === "user"
+                          ? "bg-kx-orange/10 border border-kx-orange/20 text-kx-white rounded-br-sm"
+                          : "bg-kx-surface-700/60 border border-white/5 text-kx-dark-muted rounded-bl-sm"
+                      )}>
+                        {msg.text}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <p className="text-xs text-kx-dark-muted/60 text-center max-w-sm">
+            This is a demo of Conversational & Chat Agent of Kaizenext. Microphone access required.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── Use Cases ─────────────────────────────────────────────────────────────────
 
 function UseCasesSection() {
@@ -185,7 +369,7 @@ function UseCasesSection() {
   ];
 
   return (
-    <section className="py-24 md:py-32">
+    <section id="demo" className="py-24 md:py-32">
       <div className="w-full max-w-6xl mx-auto px-6">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-16 flex flex-col items-center justify-center">
           <span className="text-kx-orange font-mono text-xs font-medium tracking-widest uppercase mb-4 block">USE CASES</span>

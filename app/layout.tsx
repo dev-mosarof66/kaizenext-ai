@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Inter, Stack_Sans_Notch, Geist, Instrument_Serif } from "next/font/google";
+import { Poppins, Inter,  Geist, Instrument_Serif } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -18,11 +18,6 @@ const poppins = Poppins({
   subsets: ["latin"],
 });
 
-const stackSansNotch = Stack_Sans_Notch({
-  variable: "--font-stackSansNotch",
-  weight: "400",
-  subsets: ["latin"],
-});
 
 const inter = Inter({
   variable: "--font-inter",
@@ -47,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", poppins.variable, stackSansNotch.variable, inter.variable, instrumentSerif.variable, "font-sans", geist.variable)}
+      className={cn("h-full", "antialiased", poppins.variable, inter.variable, instrumentSerif.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
@@ -58,7 +53,7 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         )}
-        <div className="w-full h-full">
+        <div className="w-full h-full relative">
           <Navbar />
           {children}
           <Footer />

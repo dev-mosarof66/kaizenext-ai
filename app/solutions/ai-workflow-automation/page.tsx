@@ -12,12 +12,16 @@ import {
   Code,
   CheckCircle2,
 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { WorkflowCanvas } from "@/components/workflow-canvas";
 import CountUp from "@/components/counter-up";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { PrimaryButton, OutlineButton } from "@/components/button";
+import Marquee from "react-fast-marquee";
+import {
+  SiZapier, SiMake, SiAirtable, SiNotion, SiSlack,
+  SiHubspot, SiSalesforce, SiStripe, SiOpenai, SiAnthropic, SiLangchain,
+} from "react-icons/si";
 
 // ── Animation variants ────────────────────────────────────────────────────────
 
@@ -59,7 +63,6 @@ export default function AIWorkflowAutomation() {
 // ── Hero ──────────────────────────────────────────────────────────────────────
 
 function HeroSection() {
-  const router = useRouter();
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden py-24 md:py-32">
       <div className="absolute inset-0 z-0">
@@ -87,15 +90,12 @@ function HeroSection() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="w-full flex flex-col sm:flex-row gap-4 pt-4">
-              <Link
-               href="/contact">
-                <button className="w-full bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold py-4 px-8 rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95  gap-2 group flex items-center justify-center">
-                Book a discovery call <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Link>
-              <button className="bg-kx-white/5 border border-white/10 hover:bg-kx-white/10 text-kx-white font-bold py-4 px-8 rounded-xl transition-all backdrop-blur-md">
-                See our work
-              </button>
+              <PrimaryButton navigate="/contact" className="w-full sm:w-auto">
+                Book a call <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform ml-1" />
+              </PrimaryButton>
+              <OutlineButton onClick={() => document.getElementById("live-try")?.scrollIntoView({ behavior: "smooth" })} className="w-full sm:w-auto">
+                Try it Now
+              </OutlineButton>
             </motion.div>
           </motion.div>
 
@@ -205,7 +205,7 @@ function UseCasesSection() {
   const active = INDUSTRY_TABS[activeTab];
 
   return (
-    <section className="py-24 md:py-32 overflow-hidden">
+    <section id="live-try" className="py-24 md:py-32 overflow-hidden">
       <div className="w-full mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center mb-16">
           <span className="text-kx-orange font-mono text-xs font-medium tracking-widest uppercase mb-4 block">LIVE SIMULATIONS</span>
@@ -255,60 +255,57 @@ function UseCasesSection() {
 // ── Stack ─────────────────────────────────────────────────────────────────────
 
 function StackSection() {
-  const tools = [
-    { name: "n8n", color: "#EA4335" },
-    { name: "Zapier", color: "#FF4A00" },
-    { name: "Make", color: "#6D00CC" },
-    { name: "Airtable", color: "#FFBF00" },
-    { name: "Notion", color: "#FFFFFF" },
-    { name: "Slack", color: "#4A154B" },
-    { name: "HubSpot", color: "#FF7A59" },
-    { name: "Salesforce", color: "#00A1E0" },
-    { name: "Stripe", color: "#635BFF" },
-    { name: "OpenAI", color: "#10a37f" },
-    { name: "Anthropic", color: "#D4A26A" },
-    { name: "LangChain", color: "#1C7A3E" },
+  const tools: { name: string; Icon: React.ComponentType<{ size?: number }>; color: string }[] = [
+    { name: "n8n",         Icon: Workflow,      color: "#EA4335" },
+    { name: "Zapier",      Icon: SiZapier,      color: "#FF4A00" },
+    { name: "Make",        Icon: SiMake,        color: "#6D00CC" },
+    { name: "Airtable",    Icon: SiAirtable,    color: "#FFBF00" },
+    { name: "Notion",      Icon: SiNotion,      color: "#FFFFFF" },
+    { name: "Slack",       Icon: SiSlack,       color: "#4A154B" },
+    { name: "HubSpot",     Icon: SiHubspot,     color: "#FF7A59" },
+    { name: "Salesforce",  Icon: SiSalesforce,  color: "#00A1E0" },
+    { name: "Stripe",      Icon: SiStripe,      color: "#635BFF" },
+    { name: "OpenAI",      Icon: SiOpenai,      color: "#10a37f" },
+    { name: "Anthropic",   Icon: SiAnthropic,   color: "#D4A26A" },
+    { name: "LangChain",   Icon: SiLangchain,   color: "#1C7A3E" },
   ];
 
   return (
     <section className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-kx-surface-950/40 pointer-events-none" />
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-14">
+
+      <div className="container mx-auto px-6 relative z-10 mb-14">
+        <div className="text-center">
           <span className="text-kx-orange font-mono text-xs font-medium tracking-widest uppercase mb-4 block">TECH STACK</span>
           <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
             Tools we <span className="italic font-serif text-kx-orange">speak fluently.</span>
           </h2>
           <p className="text-kx-dark-muted max-w-xl mx-auto">We integrate with whatever you already use — no rip-and-replace required.</p>
         </div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
-          className="flex flex-wrap justify-center gap-3"
-        >
-          {tools.map((tool, i) => (
-            <motion.div
-              key={i}
-              variants={{
-                hidden: { opacity: 0, scale: 0.85 },
-                visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 200, damping: 18 } }
-              }}
-              whileHover={{ scale: 1.08, y: -2 }}
-              className="group relative px-5 py-2.5 rounded-full border border-kx-dark-border bg-kx-surface-raised/60 backdrop-blur-sm cursor-default transition-all duration-300 hover:border-kx-orange/40 hover:shadow-[0_0_20px_rgba(232,89,58,0.12)]"
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: tool.color }} />
-                <span className="text-sm font-bold text-kx-dark-muted group-hover:text-kx-white transition-colors uppercase tracking-tight">
-                  {tool.name}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
+
+      <Marquee
+        speed={50}
+        pauseOnHover
+        gradient
+        gradientColor="var(--color-kx-surface)"
+        gradientWidth={120}
+        className="py-2"
+      >
+        {tools.map((tool, i) => (
+          <div
+            key={i}
+            className="mx-2 flex items-center gap-2.5 px-5 py-3 rounded-full border border-kx-dark-border bg-kx-surface-raised/60 backdrop-blur-sm hover:border-kx-orange/40 hover:shadow-[0_0_20px_rgba(232,89,58,0.12)] transition-all duration-300 cursor-default group"
+          >
+            <span style={{ color: tool.color }}>
+              <tool.Icon size={17} />
+            </span>
+            <span className="text-sm font-semibold text-kx-dark-muted group-hover:text-kx-white transition-colors uppercase tracking-tight whitespace-nowrap">
+              {tool.name}
+            </span>
+          </div>
+        ))}
+      </Marquee>
     </section>
   );
 }

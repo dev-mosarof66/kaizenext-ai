@@ -1,8 +1,8 @@
 "use client";
 
 import { ArrowRight, CheckCircle2, TrendingDown, Clock, ShieldAlert } from "lucide-react";
-import Link from "next/link";
 import { motion } from "motion/react";
+import { OutlineButton } from "./button";
 
 export function FeaturedProduct() {
   const outcomes = [
@@ -12,7 +12,7 @@ export function FeaturedProduct() {
   ];
 
   return (
-    <motion.section 
+    <motion.section
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -21,9 +21,9 @@ export function FeaturedProduct() {
     >
       {/* Dynamic Background Elements */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]"></div>
-      
+
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -50,7 +50,7 @@ export function FeaturedProduct() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -60,11 +60,11 @@ export function FeaturedProduct() {
             <p className="text-xl  text-kx-muted font-medium leading-relaxed max-w-lg">
               Stop losing money on underperforming ads. Our AI monitors your ad spend in real-time and alerts you <span className="text-primary italic">instantly on WhatsApp</span> — before they become budget-draining disasters.
             </p>
-            
+
             <div className="space-y-6">
               {outcomes.map((outcome, idx) => (
-                <motion.div 
-                  key={idx} 
+                <motion.div
+                  key={idx}
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -78,21 +78,18 @@ export function FeaturedProduct() {
                 </motion.div>
               ))}
             </div>
-            
+
             <div className="pt-6">
-              <Link href="/solutions/ai-ad-automation">
-                <button className="relative group overflow-hidden rounded-full bg-kx-surface-800 border border-kx-surface-600 px-8 py-4 transition-all hover:border-kx-orange-400/50 hover:shadow-[0_0_40px_-10px_rgba(242,105,74,0.3)] cursor-pointer">
-                  <div className="absolute inset-0 w-0 bg-kx-orange transition-all duration-250 ease-out group-hover:w-full"></div>
-                  <div className="relative flex items-center gap-3 text-white font-semibold">
-                    <span>See the product in action</span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </button>
-              </Link>
+              <OutlineButton navigate="/product-demo" className="w-full sm:w-auto">
+                <div className="relative flex items-center gap-3 text-white font-semibold">
+                  <span>See the product in action</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </OutlineButton>
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95, rotate: -2 }}
             whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
             viewport={{ once: true }}
@@ -101,10 +98,10 @@ export function FeaturedProduct() {
           >
             {/* Glowing background behind phone */}
             <div className="absolute inset-0 bg-linear-to-tr from-kx-orange-600/30 to-kx-orange-400/10 blur-[80px] rounded-full scale-90" />
-            
+
             {/* Phone Mockup Container */}
             <div className="relative mx-auto border-[6px] border-kx-surface-950/90 rounded-[3rem] h-[600px] w-full max-w-[300px] bg-kx-surface-950 shadow-2xl overflow-hidden backdrop-blur-xl ring-1 ring-white/10 flex flex-col">
-              
+
               {/* Hardware elements */}
               <div className="absolute top-0 inset-x-0 h-7 bg-kx-surface-950/90 rounded-b-3xl w-[140px] mx-auto z-30 flex items-center justify-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
@@ -116,7 +113,7 @@ export function FeaturedProduct() {
 
               {/* Wallpaper/Screen */}
               <div className="absolute inset-0 bg-linear-to-b from-kx-surface-900/90 to-kx-surface-950/95" />
-              
+
               {/* WhatsApp UI */}
               <div className="relative z-20 flex flex-col h-full w-full">
                 {/* Header */}
@@ -139,9 +136,9 @@ export function FeaturedProduct() {
                 <div className="flex-1 p-4 flex flex-col gap-4 overflow-hidden relative">
                   <div className="absolute inset-0 bg-[#0b141a] opacity-90" />
                   <div className="absolute inset-0 bg-[url('https://static.whatsapp.net/rsrc.php/v3/yl/r/gi_DckOUM5a.png')] opacity-10 mix-blend-overlay" />
-                  
+
                   {/* Messages */}
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, x: -20, scale: 0.9 }}
                     whileInView={{ opacity: 1, x: 0, scale: 1 }}
                     viewport={{ once: true }}
@@ -157,7 +154,7 @@ export function FeaturedProduct() {
                     <p className="text-[10px] text-[#8696a0] mt-2 text-right">10:42 AM</p>
                   </motion.div>
 
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, x: -20, scale: 0.9 }}
                     whileInView={{ opacity: 1, x: 0, scale: 1 }}
                     viewport={{ once: true }}
@@ -172,8 +169,8 @@ export function FeaturedProduct() {
                     </p>
                     <p className="text-[10px] text-[#8696a0] mt-2 text-right">10:43 AM</p>
                   </motion.div>
-                  
-                  <motion.div 
+
+                  <motion.div
                     initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}

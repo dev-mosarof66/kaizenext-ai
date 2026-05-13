@@ -3,9 +3,9 @@
 import { FinalCTA } from "@/components/final-cta";
 import { motion, AnimatePresence, Variants} from "motion/react";
 import { ArrowRight, Check, ChevronDown, ChevronRight, Zap, ShieldAlert, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { PrimaryButton, OutlineButton } from "@/components/button";
 import CountUp from "@/components/counter-up";
 
 // ── Animation variants ────────────────────────────────────────────────────────
@@ -32,7 +32,7 @@ const itemVariants: Variants = {
 export default function AIAdAutomationPage() {
   return (
     <div className="flex min-h-screen flex-col bg-kx-surface text-kx-white dark selection:bg-kx-orange/30 selection:text-kx-white">
-      <main className="flex-1 pt-20 w-full">
+      <main className="flex-1 w-full">
         <HeroSection />
         <BenefitsStrip />
         <BeforeAfterSection />
@@ -75,14 +75,12 @@ function HeroSection() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="w-full flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/contact">
-                <button className="w-full bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold py-4 px-8 rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95  gap-2 group flex items-center justify-center">
-                  Book a demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Link>
-              <button className="bg-kx-white/5 border border-white/10 hover:bg-kx-white/10 text-kx-white font-bold py-4 px-8 rounded-xl transition-all backdrop-blur-md">
+              <PrimaryButton navigate="/contact" className="w-full sm:w-auto">
+                Book a discovery call <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform ml-1" />
+              </PrimaryButton>
+              <OutlineButton onClick={() => document.getElementById("free-audit")?.scrollIntoView({ behavior: "smooth" })} className="w-full sm:w-auto">
                 Free ad audit
-              </button>
+              </OutlineButton>
             </motion.div>
           </motion.div>
 
@@ -577,13 +575,11 @@ function BeforeAfterSection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
-          className="text-center mt-16"
+          className="text-center mt-16 w-full flex justify-center"
         >
-          <Link href="/contact">
-            <button className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95 cursor-pointer">
-              See Your Results <ArrowRight className="w-4 h-4" />
-            </button>
-          </Link>
+          <PrimaryButton navigate="/contact">
+            Get Free Audit <ArrowRight className="w-4 h-4 ml-1" />
+          </PrimaryButton>
         </motion.div>
       </div>
     </section>
@@ -685,10 +681,39 @@ function HowItWorksSection() {
 // ── Lead Magnet ───────────────────────────────────────────────────────────────
 
 function LeadMagnetSection() {
-  const [auditEmail, setAuditEmail] = useState("");
+  const [form, setForm]     = useState({ email: "", platform: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errMsg, setErrMsg] = useState("");
+
+  const inputCls = "w-full h-12 bg-kx-surface-950/50 border border-kx-dark-border rounded-xl px-4 text-kx-white placeholder-kx-dark-muted/50 focus:outline-none focus:border-kx-orange/50 focus:ring-1 focus:ring-kx-orange/30 transition-all disabled:opacity-50";
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.email || !form.platform) {
+      setErrMsg("Please fill in all fields.");
+      setStatus("error");
+      return;
+    }
+    setStatus("loading");
+    setErrMsg("");
+    try {
+      const res = await fetch("/api/ad-audit", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Unknown error");
+      setStatus("success");
+      setForm({ email: "", platform: "" });
+    } catch (err: unknown) {
+      setErrMsg(err instanceof Error ? err.message : "Something went wrong.");
+      setStatus("error");
+    }
+  }
 
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden bg-kx-surface-950/30">
+    <section id="free-audit" className="py-24 md:py-32 relative overflow-hidden bg-kx-surface-950/30">
       <div className="container mx-auto px-6 relative z-10 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -703,54 +728,117 @@ function LeadMagnetSection() {
             <ul className="space-y-3">
               {["ROAS breakdown by campaign", "Wasted spend analysis", "3 actionable improvements", "30-min follow-up option"].map((item, idx) => (
                 <li key={idx} className="flex items-center gap-3">
-                  <Check className="w-5 h-5 text-kx-orange" />
+                  <Check className="w-5 h-5 text-kx-orange shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
           </motion.div>
 
-          <motion.form
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="bg-kx-surface-raised/40 border border-kx-dark-border rounded-3xl p-8 backdrop-blur-sm"
           >
-            <div className="flex flex-col gap-5">
-              <div>
-                <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">Email</label>
-                <input
-                  type="email"
-                  value={auditEmail}
-                  onChange={(e) => setAuditEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  className="w-full h-12 bg-kx-surface-950/50 border border-kx-dark-border rounded-xl px-4 text-kx-white placeholder-kx-dark-muted/50 focus:outline-none focus:border-kx-orange/50 focus:ring-1 focus:ring-kx-orange/30 transition-all"
-                />
-              </div>
+            <AnimatePresence mode="wait">
+              {status === "success" ? (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center gap-5 py-10 text-center"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: [0, 1.2, 1] }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center"
+                  >
+                    <CheckCircle2 className="w-8 h-8 text-green-400" />
+                  </motion.div>
+                  <div>
+                    <p className="text-xl font-bold text-kx-white mb-2">Audit request received!</p>
+                    <p className="text-kx-dark-muted text-sm">We&apos;ll send your PDF report + Loom within 24 hours.</p>
+                  </div>
+                  <button
+                    onClick={() => setStatus("idle")}
+                    className="text-xs text-kx-dark-muted/60 hover:text-kx-orange transition-colors underline underline-offset-2"
+                  >
+                    Submit another request
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onSubmit={handleSubmit}
+                  className="flex flex-col gap-5"
+                >
+                  <div>
+                    <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">Email</label>
+                    <input
+                      type="email"
+                      value={form.email}
+                      onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                      placeholder="you@company.com"
+                      disabled={status === "loading"}
+                      className={inputCls}
+                    />
+                  </div>
 
-              <div>
-                <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">Ad Platform</label>
-                <select className="w-full h-12 bg-kx-surface-950/50 border border-kx-dark-border rounded-xl px-4 text-kx-white focus:outline-none focus:border-kx-orange/50 focus:ring-1 focus:ring-kx-orange/30 transition-all">
-                  <option value="">Select...</option>
-                  <option value="meta">Meta (Facebook/Instagram)</option>
-                  <option value="google">Google Ads</option>
-                  <option value="both">Both</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
+                  <div>
+                    <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">Ad Platform</label>
+                    <select
+                      value={form.platform}
+                      onChange={e => setForm(f => ({ ...f, platform: e.target.value }))}
+                      disabled={status === "loading"}
+                      className={cn(inputCls, "appearance-none")}
+                    >
+                      <option value="">Select...</option>
+                      <option value="Meta (Facebook/Instagram)">Meta (Facebook/Instagram)</option>
+                      <option value="Google Ads">Google Ads</option>
+                      <option value="Both">Both</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
 
-              <button
-                type="submit"
-                className="w-full py-3 px-6 bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95 mt-4 flex items-center justify-center gap-2 group"
-              >
-                Get Free Audit <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+                  {status === "error" && errMsg && (
+                    <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2.5">
+                      {errMsg}
+                    </p>
+                  )}
 
-              <p className="text-xs text-kx-dark-muted/70 text-center">
-                Report within 24 hours. No credit card required.
-              </p>
-            </div>
-          </motion.form>
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="w-full py-3 px-6 bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold rounded-full shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95 mt-2 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:pointer-events-none"
+                  >
+                    {status === "loading" ? (
+                      <>
+                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                        Sending…
+                      </>
+                    ) : (
+                      <>
+                        Get Free Audit <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </button>
+
+                  <p className="text-xs text-kx-dark-muted/70 text-center">
+                    Report within 24 hours. No credit card required.
+                  </p>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -761,24 +849,28 @@ function LeadMagnetSection() {
 
 const FAQS = [
   {
-    q: "How does pricing work?",
-    a: "We bill monthly based on your ad spend tier. Starter ($1K–$5K/mo) = $149/mo. Growth ($5K–$20K/mo) = $449/mo. Scale ($20K+/mo) = $1,290/mo. No setup fees. Cancel anytime.",
+    q: "Which ad platforms do you support?",
+    a: "Meta Ads (Facebook & Instagram) and Google Ads out of the box. TikTok Ads and LinkedIn Ads are available on the Scale plan. We connect via official OAuth — no credentials stored on our end.",
   },
   {
-    q: "Can I get a refund?",
-    a: "Yes. First 30 days = 100% refund if unsatisfied. After that, cancel monthly with no penalty.",
+    q: "How does the WhatsApp alerting actually work?",
+    a: "You connect your WhatsApp Business number (takes 5 minutes via QR code). We send structured alerts the moment a campaign crosses a threshold you set — ROAS drop, CPM spike, budget burning with zero conversions. You can reply to pause or adjust the campaign directly from the chat.",
   },
   {
-    q: "How long does onboarding take?",
-    a: "Connect via OAuth (5 min). Live data arrives within 1 hour. WhatsApp alerts start immediately.",
+    q: "Will it auto-pause campaigns without my approval?",
+    a: "Only if you enable it. By default, we alert and recommend. You flip one setting to enable auto-pause on underperformers. You can whitelist campaigns that should never be touched automatically.",
   },
   {
-    q: "Is my ad data secure?",
-    a: "Yes. SOC 2 Type II certified. Data encrypted in transit and at rest. API tokens read-only. We never store credentials.",
+    q: "What ad spend do I need to make this worth it?",
+    a: "Most clients are spending $1K–$20K/month across platforms. Below $1K/month the savings-to-cost ratio is tight. Above $1K, a single prevented ROAS drop typically pays for months of the service.",
   },
   {
-    q: "Do you work with Shopify/WooCommerce?",
-    a: "Not directly yet, but we integrate via Google Analytics or Meta Conversions API. Custom connectors available for enterprise.",
+    q: "How long does setup take?",
+    a: "Under 10 minutes. Connect your Meta and Google accounts via OAuth, link your WhatsApp number, set your ROAS floor. You'll get your first real-time alert within the hour.",
+  },
+  {
+    q: "Can I customize the alert thresholds?",
+    a: "Yes — per campaign and per ad set. Set different ROAS floors, CPM ceilings, and spend velocity limits for each campaign type. Brand campaigns can have tighter rules than retargeting, for example.",
   },
 ];
 

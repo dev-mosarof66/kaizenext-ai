@@ -5,84 +5,16 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import { caseStudies as CASE_STUDIES } from "@/lib/case-studies";
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
 
-
-const CASE_STUDIES = [
-  {
-    id: "saudi-football",
-    title: "AI-Powered Player Tracking",
-    client: "Saudi Football League",
-    tagline: "22 players tracked per second · 97% detection accuracy · $2M broadcast revenue",
-    outcome: "96% tracking accuracy across 500+ matches in 6 stadiums.",
-    category: "Computer Vision",
-    stat: { value: "97%", label: "Detection accuracy" },
-    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=1200&h=675",
-    slug: "saudi-football-player-tracking",
-    featured: true,
-  },
-  {
-    id: "ecommerce-voice",
-    title: "24/7 Customer Support Voice Agent",
-    client: "E-commerce Retailer",
-    tagline: "Handles 10K+ calls/month · 80% cost reduction",
-    outcome: "Response time cut from 4.2 hours to 45 seconds. Saves $90K/year.",
-    category: "Voice AI",
-    stat: { value: "80%", label: "Cost reduction" },
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200&h=675",
-    slug: "ecommerce-voice-agent",
-  },
-  {
-    id: "saas-automation",
-    title: "Invoice Processing Automation",
-    client: "B2B SaaS Platform",
-    tagline: "500+ invoices/week · 160 hours saved · $30K/month freed",
-    outcome: "Processing time cut from 3-5 days to 2 hours, error rate from 15% to 1.2%.",
-    category: "Workflow Automation",
-    stat: { value: "160h", label: "Saved per week" },
-    image: "https://images.unsplash.com/photo-1578642387509-8ad9d849b04d?auto=format&fit=crop&q=80&w=1200&h=675",
-    slug: "saas-invoice-automation",
-  },
-  {
-    id: "startup-ai",
-    title: "RAG-Based Knowledge Assistant",
-    client: "EdTech Startup",
-    tagline: "Built in 5 weeks · 10K+ daily users · 94% query accuracy",
-    outcome: "Custom AI platform live in 5 weeks, now serving 10K+ students daily.",
-    category: "Custom AI",
-    stat: { value: "5 wks", label: "To production" },
-    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200&h=675",
-    slug: "edtech-knowledge-assistant",
-  },
-  {
-    id: "retail-ads",
-    title: "Ad Spend Optimization Engine",
-    client: "Multi-Channel Retailer",
-    tagline: "Real-time waste detection · $4.2K/month saved · zero manual work",
-    outcome: "Detected wasted spend in real-time, $4.2K/month saved, zero manual intervention.",
-    category: "Ad Automation",
-    stat: { value: "$4.2K", label: "Saved per month" },
-    image: "https://images.unsplash.com/photo-1460925895917-adf4e9a5a94f?auto=format&fit=crop&q=80&w=1200&h=675",
-    slug: "retail-ad-optimization",
-  },
-  {
-    id: "healthcare-voice",
-    title: "Appointment Scheduling Voice Bot",
-    client: "Healthcare Provider",
-    tagline: "12 languages · 500+ bookings/week · 24/7 availability",
-    outcome: "Scheduled 500+ appointments/week across 12 languages, 24/7.",
-    category: "Voice AI",
-    stat: { value: "12", label: "Languages" },
-    image: "https://images.unsplash.com/photo-1576091160550-112173f7f869?auto=format&fit=crop&q=80&w=1200&h=675",
-    slug: "healthcare-voice-scheduler",
-  },
-];
-
-const CATEGORIES = ["All", "Workflow Automation", "Voice AI", "Computer Vision", "Custom AI", "Ad Automation"];
+const CATEGORIES = ["All", "Workflow Automation", "Voice AI", "Computer Vision", "Web & Mobile Apps", "Ad Automation"];
 
 const HERO_STATS = [
   { value: "6", label: "Case studies" },
@@ -91,6 +23,7 @@ const HERO_STATS = [
 ];
 
 export default function WorkPage() {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState("All");
 
   const filtered =
@@ -165,11 +98,10 @@ export default function WorkPage() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                    activeCategory === cat
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${activeCategory === cat
                       ? "bg-kx-orange text-white shadow-[0_4px_16px_rgba(232,89,58,0.3)]"
                       : "border border-kx-dark-border text-kx-dark-muted hover:border-kx-orange/40 hover:text-kx-white"
-                  }`}
+                    }`}
                 >
                   {cat}
                 </button>
@@ -192,6 +124,14 @@ export default function WorkPage() {
               >
                 {filtered.map((study, i) => {
                   const isFeatured = study.featured && activeCategory === "All" && i === 0;
+
+                  const handleClick = () => {
+                    if (study.link) {
+                      window.open(study.link, "_blank");
+                    } else {
+                      router.push(`/work/${study.slug}`);
+                    }
+                  }
                   return (
                     <motion.div
                       key={study.id}
@@ -201,11 +141,10 @@ export default function WorkPage() {
                       }}
                       className={isFeatured ? "md:col-span-3" : ""}
                     >
-                      <Link
-                        href={`/work/${study.slug}`}
-                        className={`group flex overflow-hidden rounded-2xl border border-kx-dark-border bg-kx-surface-raised/20 transition-all duration-300 hover:border-kx-orange/25 hover:shadow-[0_0_40px_rgba(232,89,58,0.07)] ${
-                          isFeatured ? "flex-col md:flex-row h-auto md:h-95" : "flex-col h-full"
-                        }`}
+                      <div
+                        onClick={handleClick}
+                        className={`group flex overflow-hidden rounded-2xl border border-kx-dark-border bg-kx-surface-raised/20 transition-all duration-300 hover:border-kx-orange/25 hover:shadow-[0_0_40px_rgba(232,89,58,0.07)] ${isFeatured ? "flex-col md:flex-row h-auto md:h-95" : "flex-col h-full"
+                          }`}
                       >
                         {/* Image */}
                         <div className={`relative overflow-hidden bg-kx-surface-950/50 shrink-0 ${isFeatured ? "w-full md:w-[55%] h-56 md:h-full" : "h-48"}`}>
@@ -241,12 +180,12 @@ export default function WorkPage() {
                               {study.outcome}
                             </p>
                           </div>
-                          <div className={`flex items-center gap-2 text-kx-orange font-bold ${isFeatured ? "text-base mt-8" : "text-sm mt-6"}`}>
-                            View case study
+                          <div onClick={handleClick} className={`flex items-center gap-2 text-kx-orange font-bold ${isFeatured ? "text-base mt-8" : "text-sm mt-6"}`}>
+                            View
                             <ArrowRight className={`group-hover:translate-x-1.5 transition-transform ${isFeatured ? "w-4 h-4" : "w-3 h-3"}`} />
                           </div>
                         </div>
-                      </Link>
+                      </div>
                     </motion.div>
                   );
                 })}
@@ -274,7 +213,7 @@ export default function WorkPage() {
         {/* ── CTA ──────────────────────────────────────────────────────────── */}
         <section className="relative py-24 md:py-32 px-6 border-t border-kx-dark-border bg-kx-surface-950/30">
           <div className="pointer-events-none absolute inset-0">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-kx-orange/5 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-96 md:size-150 bg-kx-orange/5 rounded-full blur-3xl" />
           </div>
           <div className="relative max-w-2xl mx-auto text-center">
             <motion.div

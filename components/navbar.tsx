@@ -151,7 +151,7 @@ export function Navbar() {
           <div className="flex items-center gap-4">
             <div className="hidden sm:block relative group">
               <div className="glowing-bg absolute -inset-0.5 bg-linear-to-r from-green-600 via-yellow-600 to-blue-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"> </div>
-              <button type="button" className="relative bg-background group-hover:cursor-pointer active:scale-95 duration-150 py-2.5 px-6 text-sm font-semibold bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white border-0 shadow-(--kx-glow-orange) rounded-md transition-transform whitespace-nowrap">
+              <button type="button" className="relative bg-background group-hover:cursor-pointer active:scale-95 duration-150 py-2.5 px-6 text-sm font-semibold bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white border-0 shadow-(--kx-glow-orange) rounded-full transition-transform whitespace-nowrap">
                 Book a Call
               </button>
             </div>
@@ -257,7 +257,7 @@ export function Navbar() {
                   </div>
 
                   <div className="pt-4">
-                    <button type="button" className="w-full bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white border-0 shadow-(--kx-glow-orange) rounded-md py-3 px-6 text-sm font-semibold transition-transform active:scale-95 duration-150">
+                    <button type="button" className="w-full bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white border-0 shadow-(--kx-glow-orange) rounded-full py-3 px-6 text-sm font-semibold transition-transform active:scale-95 duration-150">
                       Book a Call
                     </button>
                   </div>
@@ -283,6 +283,9 @@ const ListItem = React.forwardRef<
           ref={ref}
           className={cn(
             "group block select-none space-y-1 rounded-xl p-3 leading-none no-underline outline-none transition-all duration-300 hover:bg-white/5 hover:translate-x-1",
+            // Override shadcn NavigationMenuLink's focus:bg-muted / data-active:bg-muted
+            // (which render as near-white when clicked).
+            "focus:bg-primary/5! focus-visible:bg-primary/5! active:bg-primary/5! data-active:bg-primary/5! data-active:hover:bg-primary/5! data-active:focus:bg-primary/5!",
             className
           )}
           {...props}

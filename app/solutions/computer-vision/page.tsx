@@ -3,11 +3,14 @@
 import { FinalCTA } from "@/components/final-cta";
 import { motion, AnimatePresence, Variants } from "motion/react";
 import { ArrowRight, ChevronDown, Eye } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { PrimaryButton, OutlineButton } from "@/components/button";
 import Video from "next-video";
 import CountUp from "@/components/counter-up";
+import Marquee from "react-fast-marquee";
+import { SiPytorch, SiOpencv, SiNvidia, SiGooglecloud } from "react-icons/si";
+import { FaAws } from "react-icons/fa";
 
 const DEMO_VIDEO_URL = "https://res.cloudinary.com/drw5jlvd5/video/upload/vision-demo-1_di87th.mp4";
 const HERO_VIDEO_URL = 'https://res.cloudinary.com/drw5jlvd5/video/upload/v1778491274/vision-demo-2_x0jcdi.mp4';
@@ -51,18 +54,9 @@ export default function ComputerVisionPage() {
   );
 }
 
-// ── Hero ──────────────────────────────────────────────────────────────────────
-
-const HERO_BG_IMAGE = "https://res.cloudinary.com/drw5jlvd5/image/upload/v1778493193/cv1_mjqrt5.avif";
-
 function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden py-24 md:py-32">
-      {/* Image background */}
-      <div className="absolute inset-0 z-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={HERO_BG_IMAGE} alt="" className="w-full h-full object-cover" />
-      </div>
 
       {/* Gradient overlays */}
       <div className="absolute inset-0 z-10 bg-linear-to-b from-kx-surface/60 via-kx-surface/40 to-kx-surface/95" />
@@ -87,14 +81,12 @@ function HeroSection() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="w-full flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/contact">
-                <button className="w-full bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold py-4 px-8 rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95  gap-2 group flex items-center justify-center">
-                  Book a demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Link>
-              <button className="bg-kx-white/5 border border-white/10 hover:bg-kx-white/10 text-kx-white font-bold py-4 px-8 rounded-xl transition-all backdrop-blur-md">
+              <PrimaryButton navigate="/contact" className="w-full sm:w-auto">
+                Book a demo <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform ml-1" />
+              </PrimaryButton>
+              <OutlineButton onClick={() => document.getElementById("case-study")?.scrollIntoView({ behavior: "smooth" })} className="w-full sm:w-auto">
                 View case study
-              </button>
+              </OutlineButton>
             </motion.div>
           </motion.div>
 
@@ -224,7 +216,7 @@ function CapabilitiesSection() {
 
 function FeaturedCaseStudySection() {
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden bg-kx-surface-950/30">
+    <section id="case-study" className="py-24 md:py-32 relative overflow-hidden bg-kx-surface-950/30">
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           <motion.div
@@ -252,11 +244,9 @@ function FeaturedCaseStudySection() {
               ))}
             </div>
 
-            <Link href="/work">
-              <button className="bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold py-4 px-8 rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-2 group">
-                Read full case study <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </Link>
+            <PrimaryButton navigate="/work">
+              Read full case study <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </PrimaryButton>
           </motion.div>
 
           <motion.div
@@ -355,13 +345,13 @@ function DomainsSection() {
 // ── Tech Stack ────────────────────────────────────────────────────────────────
 
 function TechStackSection() {
-  const tools = [
-    { name: "PyTorch", color: "#EE4C2C" },
-    { name: "YOLO", color: "#13B0F5" },
-    { name: "OpenCV", color: "#5C3EE8" },
-    { name: "NVIDIA", color: "#76B900" },
-    { name: "AWS", color: "#FF9900" },
-    { name: "GCP", color: "#4285F4" },
+  const tools: { name: string; Icon: React.ComponentType<{ size?: number; color?: string }>; color: string }[] = [
+    { name: "PyTorch", Icon: SiPytorch, color: "#EE4C2C" },
+    { name: "YOLO", Icon: Eye, color: "#13B0F5" },
+    { name: "OpenCV", Icon: SiOpencv, color: "#5C3EE8" },
+    { name: "NVIDIA", Icon: SiNvidia, color: "#76B900" },
+    { name: "AWS", Icon: FaAws, color: "#FF9900" },
+    { name: "GCP", Icon: SiGooglecloud, color: "#4285F4" },
   ];
 
   return (
@@ -373,34 +363,31 @@ function TechStackSection() {
             Built on proven <span className="italic font-serif text-kx-orange">foundations.</span>
           </h2>
         </div>
+      </div>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
-          className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto"
-        >
-          {tools.map((tool, i) => (
-            <motion.div
-              key={i}
-              variants={{
-                hidden: { opacity: 0, scale: 0.85 },
-                visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 200, damping: 18 } }
-              }}
-              whileHover={{ scale: 1.08, y: -2 }}
-              className="group relative px-5 py-2.5 rounded-full border border-kx-dark-border bg-kx-surface-raised/60 backdrop-blur-sm cursor-default transition-all duration-300 hover:border-kx-orange/40 hover:shadow-[0_0_20px_rgba(232,89,58,0.12)]"
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: tool.color }} />
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <Marquee speed={50} pauseOnHover gradient gradientColor="var(--color-kx-surface)" gradientWidth={120}>
+          {tools.map((tool, i) => {
+            const Icon = tool.Icon;
+            return (
+              <div
+                key={i}
+                className="mx-4 flex items-center gap-3 px-5 py-3 rounded-full border border-kx-dark-border bg-kx-surface-raised/60 backdrop-blur-sm hover:border-kx-orange/40 hover:shadow-[0_0_20px_rgba(232,89,58,0.12)] transition-all duration-300 cursor-default group"
+              >
+                <Icon size={18} color={tool.color} />
                 <span className="text-sm font-bold text-kx-dark-muted group-hover:text-kx-white transition-colors uppercase tracking-tight">
                   {tool.name}
                 </span>
               </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
+            );
+          })}
+        </Marquee>
+      </motion.div>
     </section>
   );
 }

@@ -6,11 +6,19 @@ import {
   ArrowRight, Check, ChevronDown, Monitor, Layers,
   BarChart3, ShoppingCart, Cpu,
 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { PrimaryButton, OutlineButton } from "@/components/button";
 import CountUp from "@/components/counter-up";
+import Marquee from "react-fast-marquee";
+import {
+  SiNextdotjs, SiReact, SiTypescript, SiTailwindcss,
+  SiNodedotjs, SiPython, SiPostgresql, SiSupabase,
+  SiPrisma, SiStripe, SiClerk, SiVercel,
+  SiOpenai, SiAnthropic, SiLangchain,
+} from "react-icons/si";
+import { FaAws } from "react-icons/fa";
 
 
 // ── Animation variants ────────────────────────────────────────────────────────
@@ -199,19 +207,12 @@ function HeroSection() {
     
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link
-                href="/contact"
-                className="group inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-linear-to-b from-kx-orange-400 to-kx-orange-600 text-kx-white font-bold rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] hover:-translate-y-1 active:scale-95 transition-all duration-200"
-              >
-                Start a project
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                href="/work"
-                className="inline-flex items-center justify-center px-8 py-3.5 border border-kx-dark-border text-kx-white font-bold rounded-xl hover:border-kx-orange/50 hover:text-kx-orange transition-all duration-200 backdrop-blur-md"
-              >
+              <PrimaryButton navigate="/contact" className="w-full sm:w-auto">
+                Start a project <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform ml-1" />
+              </PrimaryButton>
+              <OutlineButton onClick={() => document.getElementById("our-work")?.scrollIntoView({ behavior: "smooth" })} className="w-full sm:w-auto">
                 See our work
-              </Link>
+              </OutlineButton>
             </motion.div>
           </motion.div>
 
@@ -312,7 +313,7 @@ function ServicesSection() {
   ];
 
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden">
+    <section id="our-work" className="py-24 md:py-32 relative overflow-hidden">
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/4 -left-1/4 w-[70%] h-[70%] bg-kx-surface-700/20 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-1/4 -right-1/4 w-[60%] h-[60%] bg-kx-orange-600/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: "2s" }} />
@@ -435,7 +436,28 @@ function HowItWorksSection() {
               className="relative group"
             >
               {i < 3 && (
-                <div className="hidden lg:block absolute top-8 left-[calc(100%+1px)] w-6 h-px bg-kx-dark-border z-10" />
+                <>
+                  {/* Horizontal connector — 4-col desktop */}
+                  <motion.div
+                    animate={{ opacity: [0.45, 1, 0.45] }}
+                    transition={{ duration: 2, delay: i * 0.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="hidden lg:block absolute top-8 left-full w-6 h-px z-10"
+                    style={{
+                      background: "linear-gradient(to right, rgba(232,89,58,0.2), rgba(232,89,58,0.85), rgba(232,89,58,0.2))",
+                      boxShadow: "0 0 6px rgba(232,89,58,0.65), 0 0 14px rgba(232,89,58,0.3)",
+                    }}
+                  />
+                  {/* Vertical connector — single-col mobile */}
+                  <motion.div
+                    animate={{ opacity: [0.45, 1, 0.45] }}
+                    transition={{ duration: 2, delay: i * 0.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="block md:hidden absolute top-full left-1/2 -translate-x-1/2 w-px h-6 z-10"
+                    style={{
+                      background: "linear-gradient(to bottom, rgba(232,89,58,0.2), rgba(232,89,58,0.85), rgba(232,89,58,0.2))",
+                      boxShadow: "0 0 6px rgba(232,89,58,0.65), 0 0 14px rgba(232,89,58,0.3)",
+                    }}
+                  />
+                </>
               )}
               <div
                 className="h-full p-7 rounded-2xl border border-kx-dark-border bg-kx-surface-raised/40 backdrop-blur-sm transition-all duration-500 group-hover:border-kx-orange/20 flex flex-col gap-6"
@@ -464,30 +486,32 @@ function HowItWorksSection() {
 // ── Tech Stack ────────────────────────────────────────────────────────────────
 
 function TechStackSection() {
-  const stack = [
-    { name: "Next.js", color: "#FFFFFF" },
-    { name: "React", color: "#61DAFB" },
-    { name: "TypeScript", color: "#3178C6" },
-    { name: "Tailwind CSS", color: "#38BDF8" },
-    { name: "Node.js", color: "#68A063" },
-    { name: "Python", color: "#FFD43B" },
-    { name: "PostgreSQL", color: "#336791" },
-    { name: "Supabase", color: "#3ECF8E" },
-    { name: "Prisma", color: "#5A67D8" },
-    { name: "Stripe", color: "#635BFF" },
-    { name: "Clerk", color: "#6C47FF" },
-    { name: "Vercel", color: "#FFFFFF" },
-    { name: "AWS", color: "#FF9900" },
-    { name: "OpenAI", color: "#10a37f" },
-    { name: "Anthropic", color: "#D4A26A" },
-    { name: "LangChain", color: "#1C7A3E" },
+  const stack: { name: string; Icon: React.ComponentType<{ size?: number }>; color: string }[] = [
+    { name: "Next.js",    Icon: SiNextdotjs,          color: "#FFFFFF" },
+    { name: "React",      Icon: SiReact,               color: "#61DAFB" },
+    { name: "TypeScript", Icon: SiTypescript,          color: "#3178C6" },
+    { name: "Tailwind",   Icon: SiTailwindcss,         color: "#38BDF8" },
+    { name: "Node.js",    Icon: SiNodedotjs,           color: "#68A063" },
+    { name: "Python",     Icon: SiPython,              color: "#FFD43B" },
+    { name: "PostgreSQL", Icon: SiPostgresql,          color: "#336791" },
+    { name: "Supabase",   Icon: SiSupabase,            color: "#3ECF8E" },
+    { name: "Prisma",     Icon: SiPrisma,              color: "#5A67D8" },
+    { name: "Stripe",     Icon: SiStripe,              color: "#635BFF" },
+    { name: "Clerk",      Icon: SiClerk,               color: "#6C47FF" },
+    { name: "Vercel",     Icon: SiVercel,              color: "#FFFFFF" },
+    { name: "AWS",        Icon: FaAws,                 color: "#FF9900" },
+    { name: "OpenAI",     Icon: SiOpenai,              color: "#10a37f" },
+    { name: "Anthropic",  Icon: SiAnthropic,           color: "#D4A26A" },
+    { name: "LangChain",  Icon: SiLangchain,           color: "#1C7A3E" },
   ];
 
   return (
     <section className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-kx-surface-950/40 pointer-events-none" />
-      <div className="w-full max-w-7xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-14">
+
+      {/* Header — constrained */}
+      <div className="w-full max-w-7xl mx-auto px-6 relative z-10 mb-14">
+        <div className="text-center">
           <span className="text-kx-orange font-mono text-xs font-medium tracking-widest uppercase mb-4 block">TECH STACK</span>
           <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
             Built with what <span className="italic font-serif text-kx-orange">scales.</span>
@@ -496,34 +520,29 @@ function TechStackSection() {
             Modern, proven technologies. No exotic choices that become your maintenance problem later.
           </p>
         </div>
-
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
-          className="flex flex-wrap justify-center gap-3"
-        >
-          {stack.map((tool, i) => (
-            <motion.div
-              key={i}
-              variants={{
-                hidden: { opacity: 0, scale: 0.85 },
-                visible: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 200, damping: 18 } },
-              }}
-              whileHover={{ scale: 1.08, y: -2 }}
-              className="group px-5 py-2.5 rounded-full border border-kx-dark-border bg-kx-surface-raised/60 backdrop-blur-sm cursor-default transition-all duration-300 hover:border-kx-orange/40 hover:shadow-[0_0_20px_rgba(232,89,58,0.12)]"
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: tool.color }} />
-                <span className="text-sm font-bold text-kx-dark-muted group-hover:text-kx-white transition-colors uppercase tracking-tight">
-                  {tool.name}
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
+
+      <Marquee
+        speed={50}
+        pauseOnHover
+        gradient
+        gradientColor="var(--color-kx-surface)"
+        gradientWidth={120}
+      >
+        {stack.map((tool, i) => (
+          <div
+            key={i}
+            className="mx-2 flex items-center gap-2.5 px-5 py-3 rounded-full border border-kx-dark-border bg-kx-surface-raised/60 backdrop-blur-sm hover:border-kx-orange/40 hover:shadow-[0_0_20px_rgba(232,89,58,0.12)] transition-all duration-300 cursor-default group"
+          >
+            <span style={{ color: tool.color }}>
+              <tool.Icon size={17} />
+            </span>
+            <span className="text-sm font-semibold text-kx-dark-muted group-hover:text-kx-white transition-colors uppercase tracking-tight whitespace-nowrap">
+              {tool.name}
+            </span>
+          </div>
+        ))}
+      </Marquee>
     </section>
   );
 }
@@ -531,7 +550,36 @@ function TechStackSection() {
 // ── Lead Magnet ───────────────────────────────────────────────────────────────
 
 function LeadMagnetSection() {
-  const [form, setForm] = useState({ email: "", type: "", budget: "" });
+  const [form, setForm]     = useState({ email: "", type: "", budget: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errMsg, setErrMsg] = useState("");
+
+  const inputCls = "w-full h-12 bg-kx-surface-950/50 border border-kx-dark-border rounded-xl px-4 text-kx-white placeholder-kx-dark-muted/50 focus:outline-none focus:border-kx-orange/50 focus:ring-1 focus:ring-kx-orange/30 transition-all disabled:opacity-50";
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!form.email || !form.type || !form.budget) {
+      setErrMsg("Please fill in all fields.");
+      setStatus("error");
+      return;
+    }
+    setStatus("loading");
+    setErrMsg("");
+    try {
+      const res = await fetch("/api/estimate", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Unknown error");
+      setStatus("success");
+      setForm({ email: "", type: "", budget: "" });
+    } catch (err: unknown) {
+      setErrMsg(err instanceof Error ? err.message : "Something went wrong.");
+      setStatus("error");
+    }
+  }
 
   return (
     <section className="py-24 md:py-32 relative overflow-hidden bg-kx-surface-950/30">
@@ -563,74 +611,133 @@ function LeadMagnetSection() {
             </ul>
           </motion.div>
 
-          <motion.form
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="bg-kx-surface-raised/40 border border-kx-dark-border rounded-3xl p-8 backdrop-blur-sm"
-            onSubmit={e => e.preventDefault()}
           >
-            <div className="flex flex-col gap-5">
-              <div>
-                <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">
-                  Work Email
-                </label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                  placeholder="you@company.com"
-                  className="w-full h-12 bg-kx-surface-950/50 border border-kx-dark-border rounded-xl px-4 text-kx-white placeholder-kx-dark-muted/50 focus:outline-none focus:border-kx-orange/50 focus:ring-1 focus:ring-kx-orange/30 transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">
-                  Project Type
-                </label>
-                <select
-                  value={form.type}
-                  onChange={e => setForm(f => ({ ...f, type: e.target.value }))}
-                  className="w-full h-12 bg-kx-surface-950/50 border border-kx-dark-border rounded-xl px-4 text-kx-white focus:outline-none focus:border-kx-orange/50 focus:ring-1 focus:ring-kx-orange/30 transition-all"
+            <AnimatePresence mode="wait">
+              {status === "success" ? (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center gap-5 py-10 text-center"
                 >
-                  <option value="">Select...</option>
-                  <option value="saas">SaaS Product</option>
-                  <option value="internal">Internal Tool / Dashboard</option>
-                  <option value="ai">AI-Powered Web App</option>
-                  <option value="ecommerce">E-commerce / Marketplace</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">
-                  Budget Range
-                </label>
-                <select
-                  value={form.budget}
-                  onChange={e => setForm(f => ({ ...f, budget: e.target.value }))}
-                  className="w-full h-12 bg-kx-surface-950/50 border border-kx-dark-border rounded-xl px-4 text-kx-white focus:outline-none focus:border-kx-orange/50 focus:ring-1 focus:ring-kx-orange/30 transition-all"
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: [0, 1.2, 1] }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center"
+                  >
+                    <Check className="w-8 h-8 text-green-400" />
+                  </motion.div>
+                  <div>
+                    <p className="text-xl font-bold text-kx-white mb-2">You&apos;re in the queue!</p>
+                    <p className="text-kx-dark-muted text-sm">We&apos;ll send your fixed-price proposal within 24 hours.</p>
+                  </div>
+                  <button
+                    onClick={() => setStatus("idle")}
+                    className="text-xs text-kx-dark-muted/60 hover:text-kx-orange transition-colors underline underline-offset-2"
+                  >
+                    Submit another estimate
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onSubmit={handleSubmit}
+                  className="flex flex-col gap-5"
                 >
-                  <option value="">Select...</option>
-                  <option value="5-15">$5K – $15K</option>
-                  <option value="15-40">$15K – $40K</option>
-                  <option value="40-100">$40K – $100K</option>
-                  <option value="100+">$100K+</option>
-                </select>
-              </div>
+                  <div>
+                    <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">
+                      Work Email
+                    </label>
+                    <input
+                      type="email"
+                      value={form.email}
+                      onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                      placeholder="you@company.com"
+                      disabled={status === "loading"}
+                      className={inputCls}
+                    />
+                  </div>
 
-              <button
-                type="submit"
-                className="w-full py-3 px-6 bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95 mt-4 flex items-center justify-center gap-2 group"
-              >
-                Get Free Estimate <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+                  <div>
+                    <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">
+                      Project Type
+                    </label>
+                    <select
+                      value={form.type}
+                      onChange={e => setForm(f => ({ ...f, type: e.target.value }))}
+                      disabled={status === "loading"}
+                      className={cn(inputCls, "appearance-none")}
+                    >
+                      <option value="">Select...</option>
+                      <option value="SaaS Product">SaaS Product</option>
+                      <option value="Internal Tool / Dashboard">Internal Tool / Dashboard</option>
+                      <option value="AI-Powered Web App">AI-Powered Web App</option>
+                      <option value="E-commerce / Marketplace">E-commerce / Marketplace</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
 
-              <p className="text-xs text-kx-dark-muted/70 text-center">
-                Proposal within 24 hours. No commitment required.
-              </p>
-            </div>
-          </motion.form>
+                  <div>
+                    <label className="text-sm font-mono font-medium text-kx-dark-muted uppercase tracking-wide mb-2 block">
+                      Budget Range
+                    </label>
+                    <select
+                      value={form.budget}
+                      onChange={e => setForm(f => ({ ...f, budget: e.target.value }))}
+                      disabled={status === "loading"}
+                      className={cn(inputCls, "appearance-none")}
+                    >
+                      <option value="">Select...</option>
+                      <option value="$5K – $15K">$5K – $15K</option>
+                      <option value="$15K – $40K">$15K – $40K</option>
+                      <option value="$40K – $100K">$40K – $100K</option>
+                      <option value="$100K+">$100K+</option>
+                    </select>
+                  </div>
+
+                  {status === "error" && errMsg && (
+                    <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2.5">
+                      {errMsg}
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="w-full py-3 px-6 bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold rounded-full shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95 mt-2 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:pointer-events-none"
+                  >
+                    {status === "loading" ? (
+                      <>
+                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                        Sending…
+                      </>
+                    ) : (
+                      <>
+                        Get Free Estimate <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </button>
+
+                  <p className="text-xs text-kx-dark-muted/70 text-center">
+                    Proposal within 24 hours. No commitment required.
+                  </p>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </div>
     </section>
