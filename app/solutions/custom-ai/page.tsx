@@ -5,7 +5,7 @@ import { motion, AnimatePresence, Variants } from "motion/react";
 import { ArrowRight, ChevronDown, Code, Zap, Cpu, Smartphone } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { PrimaryButton, OutlineButton } from "@/components/button";
 
 // ── Animation variants ────────────────────────────────────────────────────────
 
@@ -75,14 +75,12 @@ function HeroSection() {
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/contact">
-                <button className="bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white font-bold py-4 px-8 rounded-xl shadow-[0_6px_24px_rgba(232,89,58,0.35)] transition-all hover:-translate-y-1 active:scale-95 flex items-center gap-2 group">
-                  Start a project <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </Link>
-              <button className="bg-kx-white/5 border border-white/10 hover:bg-kx-white/10 text-kx-white font-bold py-4 px-8 rounded-xl transition-all backdrop-blur-md">
+              <PrimaryButton navigate="/contact" className="w-full sm:w-auto">
+                Start a project <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </PrimaryButton>
+              <OutlineButton onClick={() => document.getElementById("our-work")?.scrollIntoView({ behavior: "smooth" })} className="w-full sm:w-auto">
                 See our work
-              </button>
+              </OutlineButton>
             </motion.div>
           </motion.div>
 
@@ -192,7 +190,7 @@ function WhatWeBuiltSection() {
   ];
 
   return (
-    <section className="py-24 md:py-32 overflow-hidden">
+    <section id="our-work" className="py-24 md:py-32 overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center mb-16">
           <span className="text-kx-orange font-mono text-xs font-medium tracking-widest uppercase mb-4 block">01 · WHAT WE BUILD</span>

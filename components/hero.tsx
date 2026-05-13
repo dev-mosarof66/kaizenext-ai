@@ -1,9 +1,8 @@
 "use client";
 import { motion } from "motion/react";
 import { Spotlight } from "@/components/ui/spotlight-new";
-import { Button } from "@/components/ui/button";
 import { ArrowRight, Brain, Database, Workflow } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { OutlineButton, PrimaryButton } from "./button";
 
 // ── Floating icon definitions ─────────────────────────────────────────────────
 const FLOAT_ICONS = [
@@ -13,7 +12,6 @@ const FLOAT_ICONS = [
 ];
 
 export function Hero() {
-  const router = useRouter();
   return (
     <motion.section
       initial={{ opacity: 0, y: 40 }}
@@ -56,13 +54,17 @@ export function Hero() {
           We design, build and operate AI products end-to-end — for SMBs and enterprises across USA, UAE, KSA, Mena Region and beyond.
         </p>
 
-        <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Button onClick={() => router.push("/contact")} className="w-96 h-14  px-6 text-base lg:text-lg font-semibold bg-linear-to-b from-kx-orange-400 to-kx-orange-600 hover:from-kx-orange-600 hover:to-kx-orange-600 text-kx-white border-0 shadow-(--kx-glow-orange) rounded-md transition-transform hover:-translate-y-0.5">
-            Book a call <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-          <Button variant="outline" onClick={() => router.push("/work")} className="w-96 h-14 px-6 text-base lg:text-lg font-semibold bg-kx-white/5 border-kx-white/10 text-kx-white hover:bg-kx-white/10 hover:text-kx-white backdrop-blur-md rounded-md transition-all">
-            See our work
-          </Button>
+        <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3 px-16">
+          <PrimaryButton navigate="/contact" className='w-full sm:w-auto'>
+            <div className="relative flex items-center gap-3 text-white font-semibold">
+              Book a call <ArrowRight className="w-4 h-4 ml-2" />
+            </div>
+          </PrimaryButton>
+          <OutlineButton navigate="/work" className='w-full sm:w-auto'>
+            <div className="relative flex items-center gap-3 text-white font-semibold">
+              See our work
+            </div>
+          </OutlineButton>
         </div>
 
 

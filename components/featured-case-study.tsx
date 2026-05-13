@@ -1,8 +1,10 @@
 "use client";
 
 import { ArrowRight, Activity, Zap, Target, Focus } from "lucide-react";
-import Link from "next/link";
 import { motion } from "motion/react";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+import { OutlineButton } from "./button";
 
 export function FeaturedCaseStudy() {
   const kpis = [
@@ -11,8 +13,10 @@ export function FeaturedCaseStudy() {
     { value: "<2s", label: "End-to-end latency", icon: Zap },
   ];
 
+  const router = useRouter();
+
   return (
-    <motion.section 
+    <motion.section
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -21,8 +25,8 @@ export function FeaturedCaseStudy() {
     >
       {/* Dynamic Aurora Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div 
-          animate={{ 
+        <motion.div
+          animate={{
             x: ["-20%", "20%", "-20%"],
             y: ["-10%", "10%", "-10%"],
             scale: [1, 1.2, 1]
@@ -30,8 +34,8 @@ export function FeaturedCaseStudy() {
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-[#00ff88]/5 blur-[120px]"
         />
-        <motion.div 
-          animate={{ 
+        <motion.div
+          animate={{
             x: ["20%", "-20%", "20%"],
             y: ["10%", "-10%", "10%"],
             scale: [1, 1.3, 1]
@@ -40,12 +44,12 @@ export function FeaturedCaseStudy() {
           className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-kx-orange-600/10 blur-[120px]"
         />
       </div>
-      
+
       {/* Subtle Dot Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] bg-size-[32px_32px]"></div>
-      
+
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -72,9 +76,9 @@ export function FeaturedCaseStudy() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16">
-          
+
           {/* Dashboard Mockup */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -82,8 +86,8 @@ export function FeaturedCaseStudy() {
             className="lg:col-span-8 relative w-full order-2 lg:order-1"
           >
             <div className="absolute -inset-1 bg-linear-to-r from-kx-orange-600/30 to-kx-orange-400/10 blur-2xl rounded-[2rem] opacity-50" />
-            
-            <div className="relative border border-white/10 rounded-[1.5rem] bg-kx-surface-950 shadow-2xl overflow-hidden backdrop-blur-xl ring-1 ring-white/5 flex flex-col h-[400px] md:h-[500px]">
+
+            <div className="relative border border-white/10 rounded-[1.5rem] bg-kx-surface-950 shadow-2xl overflow-hidden backdrop-blur-xl ring-1 ring-white/5 flex flex-col h-100 md:h-125">
               {/* Header */}
               <div className="bg-kx-surface-900 border-b border-white/5 px-4 py-3 flex items-center justify-between z-20">
                 <div className="flex items-center gap-3">
@@ -111,18 +115,18 @@ export function FeaturedCaseStudy() {
                   <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-white/10 -translate-y-1/2"></div>
                   <div className="absolute top-1/2 left-1/2 w-32 h-32 border-2 border-white/10 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
                   <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-white/20 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
-                  
+
                   {/* Penalty Box Top */}
                   <div className="absolute top-0 left-1/2 w-64 h-24 border-2 border-t-0 border-white/10 -translate-x-1/2"></div>
                   {/* Penalty Box Bottom */}
                   <div className="absolute bottom-0 left-1/2 w-64 h-24 border-2 border-b-0 border-white/10 -translate-x-1/2"></div>
                 </div>
-                
+
                 {/* Computer Vision Overlay Grid */}
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#00ff8808_1px,transparent_1px),linear-gradient(to_bottom,#00ff8808_1px,transparent_1px)] bg-size-[32px_32px] mix-blend-overlay"></div>
 
                 {/* Animated Scanner Line */}
-                <motion.div 
+                <motion.div
                   animate={{ y: ["-100%", "200%"] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                   className="absolute left-0 right-0 h-32 bg-linear-to-b from-transparent via-[#00ff88]/10 to-transparent pointer-events-none border-b border-[#00ff88]/30"
@@ -138,21 +142,21 @@ export function FeaturedCaseStudy() {
                   ].map((player, i) => (
                     <motion.div
                       key={`team-a-${i}`}
-                      animate={{ 
+                      animate={{
                         left: player.x,
                         top: player.y,
                         opacity: [0, 1, 1, 1, 1, 0, 0]
                       }}
-                      transition={{ 
-                        duration: 5, 
-                        repeat: Infinity, 
+                      transition={{
+                        duration: 5,
+                        repeat: Infinity,
                         ease: "linear",
                         times: [0, 0.1, 0.4, 0.7, 0.9, 0.95, 1]
                       }}
                       className="absolute w-4 h-4 rounded-full bg-kx-orange-400 border border-white shadow-[0_0_15px_rgba(242,105,74,0.6)]"
                     >
                       {/* Bounding Box */}
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0.2, 0.8, 0.2] }}
                         transition={{ duration: 2, repeat: Infinity }}
@@ -173,20 +177,20 @@ export function FeaturedCaseStudy() {
                   ].map((player, i) => (
                     <motion.div
                       key={`team-b-${i}`}
-                      animate={{ 
+                      animate={{
                         left: player.x,
                         top: player.y,
                         opacity: [0, 1, 1, 1, 1, 0, 0]
                       }}
-                      transition={{ 
-                        duration: 5, 
-                        repeat: Infinity, 
+                      transition={{
+                        duration: 5,
+                        repeat: Infinity,
                         ease: "linear",
                         times: [0, 0.1, 0.4, 0.7, 0.9, 0.95, 1]
                       }}
                       className="absolute w-4 h-4 rounded-full bg-[#00D4FF] border border-white shadow-[0_0_15px_rgba(0,212,255,0.6)]"
                     >
-                      <motion.div 
+                      <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0.2, 0.8, 0.2] }}
                         transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
@@ -197,23 +201,23 @@ export function FeaturedCaseStudy() {
                       </div>
                     </motion.div>
                   ))}
-                  
+
                   {/* Ball */}
                   <motion.div
-                    animate={{ 
+                    animate={{
                       left: ["20%", "20%", "35%", "70%", "88%", "88%", "20%"],
                       top: ["40%", "40%", "50%", "55%", "40%", "40%", "40%"],
                       opacity: [0, 1, 1, 1, 1, 0, 0]
                     }}
-                    transition={{ 
-                      duration: 5, 
-                      repeat: Infinity, 
+                    transition={{
+                      duration: 5,
+                      repeat: Infinity,
                       ease: "linear",
                       times: [0, 0.1, 0.4, 0.7, 0.9, 0.95, 1]
                     }}
                     className="absolute w-2 h-2 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,1)]"
                   >
-                    <motion.div 
+                    <motion.div
                       animate={{ scale: [1, 2, 1], opacity: [1, 0, 1] }}
                       transition={{ duration: 1, repeat: Infinity }}
                       className="absolute inset-0 border border-white rounded-full"
@@ -221,10 +225,10 @@ export function FeaturedCaseStudy() {
                   </motion.div>
                 </div>
               </div>
-              
+
               {/* Telemetry Footer */}
               <div className="h-10 bg-[#060a09] border-t border-white/5 flex items-center px-4 overflow-hidden">
-                <motion.div 
+                <motion.div
                   animate={{ x: [0, -400] }}
                   transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
                   className="whitespace-nowrap font-mono text-[10px] text-[#00ff88]/60 flex gap-8"
@@ -265,22 +269,18 @@ export function FeaturedCaseStudy() {
               </motion.div>
             ))}
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.6 }}
               className="mt-4"
             >
-              <Link href="/work" className="block w-full">
-                <button className="w-full relative group overflow-hidden rounded-[1.25rem] bg-kx-surface-800 border border-kx-surface-600 px-6 py-4 transition-all hover:border-kx-orange-400/50 hover:shadow-[0_0_40px_-10px_rgba(242,105,74,0.3)] cursor-pointer">
-                  <div className="absolute inset-0 w-0 bg-kx-orange transition-all duration-300 ease-out group-hover:w-full"></div>
-                  <div className="relative flex items-center justify-center gap-3 text-white font-semibold">
-                    <span>Read the case study</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </button>
-              </Link>
+              <OutlineButton navigate="" className="w-full">
+                <div className="relative flex items-center gap-3 text-white font-semibold">
+                  See full case study <ArrowRight className="w-4 h-4 ml-2" />
+                </div>
+              </OutlineButton>
             </motion.div>
           </div>
 
